@@ -1,0 +1,83 @@
+alias: Play chime on Sonos when doorbell is pressed
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - binary_sensor.doorbell_doorbell
+    to: "on"
+condition: []
+action:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.85
+    target:
+      entity_id:
+        - media_player.bedroom
+        - media_player.kitchen
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.kitchen
+    data:
+      media_content_id: media-source://media_source/local/sounds_sounds_button_Chime.mp3
+      media_content_type: audio/mpeg
+    metadata:
+      title: sounds_sounds_button_Chime.mp3
+      thumbnail: null
+      media_class: music
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://media_source
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.bedroom
+    data:
+      media_content_id: media-source://media_source/local/sounds_sounds_button_Chime.mp3
+      media_content_type: audio/mpeg
+    metadata:
+      title: sounds_sounds_button_Chime.mp3
+      thumbnail: null
+      media_class: music
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://media_source
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 4
+      milliseconds: 0
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.bedroom_2
+    data:
+      media_content_id: media-source://tts/google_translate?message=Someone+is+at+the+Front+Door
+      media_content_type: provider
+    metadata:
+      title: Someone is at the Front Door
+      thumbnail: https://brands.home-assistant.io/_/google_translate/logo.png
+      media_class: app
+      children_media_class: null
+      navigateIds:
+        - {}
+        - media_content_type: app
+          media_content_id: media-source://tts
+        - media_content_type: provider
+          media_content_id: >-
+            media-source://tts/google_translate?message=Someone+is+at+the+Front+Door
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 4
+      milliseconds: 0
+  - service: sonos.restore
+    data:
+      with_group: true
+      entity_id: media_player.kitchen
+  - service: sonos.restore
+    data:
+      with_group: true
+      entity_id: media_player.bedroom
+mode: single
